@@ -1,4 +1,5 @@
 /*not a className so not . in the front*/
 body{
   font-family: 'Open Sans Condensed';
+  padding: 20px 60px;  /*20px on the side and 80 px top/bottom*/
 }

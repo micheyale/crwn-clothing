@@ -9,6 +9,8 @@
   border: 1px solid black;
   margin: 0 7.5px 15px;
   overflow: hidden; //the image will expand within the menu-item space
+
+  //for the hovering effect of image enlarging
   &:hover {
     cursor: pointer; 
 
