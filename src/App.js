@@ -5,7 +5,7 @@ import Homepage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { auth } from '../src/firebase/firebase.utils';
+import { auth, createUserProfileDocument } from '../src/firebase/firebase.utils';
 
 // const HatsPage = (props) => {
 //   console.log(props);
@@ -32,9 +32,25 @@ class App extends React.Component {
   // constantly remounting component so called onAuthStateChanged to determine user's state
   componentDidMount() {
     //auth.onAuthStateChanged returns a function
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user });
-      console.log(user);
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+
+      //check if user is signed in 
+      if (userAuth) {
+        // check if DB have updated at that user
+        const userRef = await createUserProfileDocument(userAuth);
+
+        //user userRef object to update state
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            // update state with snapShot id and the data in snapshot
+            currentUser: snapShot.id,
+            ...snapShot.data()
+          });
+          console.log(this.state);
+        });
+      }
+      this.setState({ currentUser: userAuth });
+
     });
   }
 

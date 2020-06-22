@@ -13,6 +13,36 @@ const config = {
     measurementId: "G-5JSD3GXTPJ"
 };
 
+//making API request thus async 
+export const createUserProfileDocument = async (userAuth, additionalInfo) => {
+    if (!userAuth) return;
+
+    // query reference to the user (document/collection)
+    const userRef = firestore.doc(`users/${userAuth.uid}`);
+
+    const snapShot = await userRef.get();
+    //snapShot of an object have an exist property to see if user is in database
+
+    if (!snapShot.exist) {
+        const { displayName, email } = userAuth;
+        //know when we created this user in DB 
+        const createdAt = new Date();
+
+        try {
+            // to CRUD new user in DB we need to user documentRef 
+            await userRef.set({
+                displayName,
+                email,
+                createdAt,
+                ...additionalInfo
+            });
+        } catch (error) {
+            console.log('error creating user', error.message);
+        }
+    }
+    return userRef;
+}
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();

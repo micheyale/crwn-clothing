@@ -23,7 +23,7 @@ class SignIn extends React.Component {
     };
 
     handleChange = event => {
-        //pull out the value and name of from eventt.target(what is going into the form)
+        //pull out the value and name of from event.target(what is going into the form)
         const { value, name } = event.target;
 
         this.setState({ [name]: value });
