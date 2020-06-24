@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 //Not JSX file so importing .svg file as a React Component
 import { ReactComponent as Logo } from '../../assests/crown.svg';
 import { auth } from '../../firebase/firebase.utils';
+//connect: higher order component that allows us to connect to any redux
+import { connect } from 'react-redux';
 
 import './header.styles.scss';
 
@@ -25,4 +27,12 @@ const Header = ({ currentUser }) => (
     </div>
 );
 
-export default Header;
+//access root reducer state
+const mapStateToProps = (state) => ({
+    //currentUser is the name of prop to pass into Header
+    currentUser: state.user.currentUser
+});
+
+//pass connect with two function(second function optional) and return a new higher order function to be placed in Header
+//first function pass to connect will allow access to reducer state
+export default connect(mapStateToProps)(Header);
