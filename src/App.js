@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Homepage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
@@ -61,7 +61,7 @@ class App extends React.Component {
           {/** Route have the location, match and history property */}
           <Route exact path='/' component={Homepage} />
           <Route path='/shop' component={ShopPage} />
-          <Route path='/signin' component={SignInAndSignUp} />
+          <Route exact path='/signin' render={() => this.props.currentUser ? (<Redirect to='/' />) : (<SignInAndSignUp />)} />
         </Switch>
 
       </div >
@@ -69,10 +69,15 @@ class App extends React.Component {
   }
 }
 
+//need currentUser from redux state
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+})
+
 //dispatch shows whatever obj you're passing to me is an action obj that I will pass to every reducer
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
 });
 
 //connect App to the Second argument of connect 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
