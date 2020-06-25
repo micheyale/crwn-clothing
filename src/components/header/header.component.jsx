@@ -5,10 +5,12 @@ import { ReactComponent as Logo } from '../../assests/crown.svg';
 import { auth } from '../../firebase/firebase.utils';
 //connect: higher order component that allows us to connect to any redux
 import { connect } from 'react-redux';
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropDown from '../cart-dropdown/cart-dropdown.component';
 
 import './header.styles.scss';
 
-const Header = ({ currentUser }) => (
+const Header = ({ currentUser, hidden }) => (
     <div className='header'>
         <Link className='logo-container' to='/'>
             <Logo className='logo' />
@@ -23,14 +25,19 @@ const Header = ({ currentUser }) => (
                     :
                     <Link className='option' to='/signin'>SIGN IN</Link>
             }
-        </div>
+            <CartIcon />
+        </div>{
+            hidden ? null : <CartDropDown />
+        }
     </div>
 );
 
 //access root reducer state
-const mapStateToProps = (state) => ({
+//destructure the state further down to user and cart
+const mapStateToProps = ({ user: { currentUser }, cart: { hidden } }) => ({
     //currentUser is the name of prop to pass into Header
-    currentUser: state.user.currentUser
+    currentUser,
+    hidden
 });
 
 //pass connect with two function(second function optional) and return a new higher order function to be placed in Header
