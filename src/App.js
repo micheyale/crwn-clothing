@@ -1,13 +1,17 @@
 import React from 'react';
 import './App.css';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
 import Homepage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
-import Header from './components/header/header.component';
 import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
+import CheckoutPage from './pages/checkout/checkout.component';
+import Header from './components/header/header.component';
 import { auth, createUserProfileDocument } from '../src/firebase/firebase.utils';
-import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selectors';
 
 // const HatsPage = (props) => {
 //   console.log(props);
@@ -61,6 +65,7 @@ class App extends React.Component {
           {/** Route have the location, match and history property */}
           <Route exact path='/' component={Homepage} />
           <Route path='/shop' component={ShopPage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
           <Route exact path='/signin' render={() => this.props.currentUser ? (<Redirect to='/' />) : (<SignInAndSignUp />)} />
         </Switch>
 
@@ -70,8 +75,8 @@ class App extends React.Component {
 }
 
 //need currentUser from redux state
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
 })
 
 //dispatch shows whatever obj you're passing to me is an action obj that I will pass to every reducer
